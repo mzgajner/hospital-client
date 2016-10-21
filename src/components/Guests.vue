@@ -18,6 +18,9 @@
           <td>{{ guest.name }}</td>
           <td>{{ guest.events.map((event) => event.location).join(', ') }}</td>
           <td class="is-icon">
+            <a href="#" @click.prevent="showEditForm(guest._id)">
+              <i class="fa fa-pencil-square-o"></i>
+            </a>
             <a href="#" @click.prevent="removeGuest(guest._id)">
               <i class="fa fa-trash"></i>
             </a>
@@ -28,39 +31,70 @@
 
     <hr>
 
-    <h2 class="title is-3">Add guest</h2>
+    <button class="button is-primary is-large" @click.prevent="showAddForm">
+      Add guest
+    </button>
 
-    <form @submit.prevent="create" id="myForm">
+    <form-popup
+      :close="toggleGuestFormOff"
+      :loading="getGuestSaving"
+      :submit="createOrUpdate"
+      :title="getGuestSelected ? 'Edit guest' : 'Add guest'"
+      :visible="getGuestFormVisible"
+    >
       <label class="label" for="name">Name</label>
       <p class="control">
-        <input id="name" name="name" class="input" type="text" placeholder="Enter name">
+        <input :value="getGuestSelected ? getGuestSelected.name : ''" id="name" name="name" class="input" type="text" placeholder="Enter name">
       </p>
-      <p class="control">
-        <button type="submit" class="button is-primary"
-        :class="{ 'is-loading': getGuestSaving }">Submit</button>
-      </p>
-    </form>
+    </form-popup>
 
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+
+import FormPopup from './_FormPopup.vue'
 
 export default {
   name: 'Guests',
   computed: mapGetters([
     'getGuests',
-    'getGuestSaving'
+    'getGuestSaving',
+    'getGuestFormVisible',
+    'getGuestSelected'
   ]),
+  components: {
+    FormPopup
+  },
   methods: {
-    create(event) {
-      var formElement = event.currentTarget
+    createOrUpdate(event) {
+      var formElement = event.currentTarget,
+          guestMethod = this.getGuestSelected ? this.updateGuest : this.addGuest
 
-      this.addGuest(new FormData(formElement))
+      guestMethod(new FormData(formElement))
+      this.toggleGuestFormOff()
       formElement.reset()
     },
-    ...mapActions(['fetchGuests', 'addGuest', 'removeGuest'])
+    showEditForm(id) {
+      this.updateSelectedGuestId(id)
+      this.toggleGuestFormOn()
+    },
+    showAddForm() {
+      this.updateSelectedGuestId(null)
+      this.toggleGuestFormOn()
+    },
+    ...mapMutations({
+      toggleGuestFormOn: 'TOGGLE_GUEST_FORM_ON',
+      toggleGuestFormOff: 'TOGGLE_GUEST_FORM_OFF',
+      updateSelectedGuestId: 'UPDATE_SELECTED_GUEST_ID'
+    }),
+    ...mapActions([
+      'addGuest',
+      'fetchGuests',
+      'updateGuest',
+      'removeGuest'
+    ])
   },
   mounted() {
     this.fetchGuests()

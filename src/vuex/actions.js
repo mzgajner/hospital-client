@@ -15,8 +15,14 @@ export const addGuest = ({ commit, dispatch }, guest) => {
   })
 }
 
-export const removeGuest = ({ commit, dispatch }, id) => {
+export const removeGuest = ({ dispatch }, id) => {
   Vue.http.delete(`guests/${id}`).then(() => {
+    dispatch('fetchGuests')
+  })
+}
+
+export const updateGuest = ({ state, dispatch }, guest) => {
+  Vue.http.put(`guests/${state.guests.selectedId}`, guest).then(() => {
     dispatch('fetchGuests')
   })
 }
