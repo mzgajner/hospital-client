@@ -12,8 +12,9 @@ import Events from './components/Events.vue'
 
 import * as actions from './vuex/actions.js'
 import * as getters from './vuex/getters.js'
-import guests from './vuex/modules/guests.js'
+import general from './vuex/modules/_general.js'
 import events from './vuex/modules/events.js'
+import guests from './vuex/modules/guests.js'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -25,6 +26,7 @@ const store = new Vuex.Store({
   actions,
   getters,
   modules: {
+    general,
     events,
     guests
   }

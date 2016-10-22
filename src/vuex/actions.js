@@ -1,34 +1,28 @@
 import Vue from 'vue'
 
-export const fetchGuests = ({ commit }) => {
-  Vue.http.get('guests').then((response) => {
-    commit('UPDATE_GUESTS', response.body)
+export const fetchCurrentEntity = ({ commit, state }) => {
+  Vue.http.get(state.general.currentEntity).then((response) => {
+    commit(`UPDATE_${state.general.currentEntity.toUpperCase()}`, response.body)
   })
 }
 
-export const addGuest = ({ commit, dispatch }, guest) => {
-  commit('TOGGLE_GUEST_SAVING_ON')
+export const createEntity = ({ state, commit, dispatch }, entity) => {
+  commit('TOGGLE_SAVING_ON')
 
-  Vue.http.post('guests', guest).then((response) => {
-    dispatch('fetchGuests')
-    commit('TOGGLE_GUEST_SAVING_OFF')
+  Vue.http.post(state.general.currentEntity, entity).then((response) => {
+    dispatch('fetchCurrentEntity')
+    commit('TOGGLE_SAVING_OFF')
   })
 }
 
-export const removeGuest = ({ dispatch }, id) => {
-  Vue.http.delete(`guests/${id}`).then(() => {
-    dispatch('fetchGuests')
+export const removeEntity = ({ state, dispatch }, id) => {
+  Vue.http.delete(`${state.general.currentEntity}/${id}`).then(() => {
+    dispatch('fetchCurrentEntity')
   })
 }
 
-export const updateGuest = ({ state, dispatch }, guest) => {
-  Vue.http.put(`guests/${state.guests.selectedId}`, guest).then(() => {
-    dispatch('fetchGuests')
-  })
-}
-
-export const fetchEvents = ({ commit }) => {
-  Vue.http.get('events').then((response) => {
-    commit('UPDATE_EVENTS', response.body)
+export const updateEntity = ({ state, dispatch }, entity) => {
+  Vue.http.put(`${state.general.currentEntity}/${state.general.selectedId}`, entity).then(() => {
+    dispatch('fetchCurrentEntity')
   })
 }
