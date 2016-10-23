@@ -66,9 +66,13 @@ export default {
     createOrUpdate(event) {
       var formElement = event.currentTarget,
           method = this.getSelected ? this.updateEntity : this.createEntity,
-          formData = new FormData(formElement)
+          formData = new FormData(formElement),
+          formObject = _.fromPairs(Array.from(formData.keys()).map((key) => {
+            var values = formData.getAll(key)
+            return [key, values.length === 1 ? values[0] : values]
+          }))
 
-      method(formData)
+      method(formObject)
       this.toggleFormOff()
       formElement.reset()
     },

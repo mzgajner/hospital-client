@@ -8,22 +8,19 @@
       { id: 'organisation', label: 'Organisation', type: String },
       { id: 'arrival', label: 'Arrival', reference: 'transports' },
       { id: 'departure', label: 'Departure', reference: 'transports' },
-      { id: 'accomodation', label: 'Accomodation', reference: 'rooms' },
-      { id: 'events', label: 'Events', reference: 'events' }
+      { id: 'accommodation', label: 'Accommodation', reference: 'rooms' },
+      { id: 'events', label: 'Events', type: Array, reference: 'events' }
     ]"/>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 import EntityList from './_EntityList.vue'
 
 export default {
   name: 'Guests',
   components: { EntityList },
-  methods: mapMutations({ updateCurrentEntity: 'UPDATE_CURRENT_ENTITY' }),
-  created() {
-    this.updateCurrentEntity('guests')
+  beforeCreate() {
+    this.$store.commit('UPDATE_CURRENT_ENTITY', 'guests')
   }
 }
 </script>

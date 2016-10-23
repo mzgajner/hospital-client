@@ -11,7 +11,7 @@
     </thead>
     <tbody>
       <tr v-for="item in items">
-        <td v-for="column in columns">{{ formatValueForDisplay(item[column.id], column.reference) }}</td>
+        <td v-for="column in columns">{{ formatValueForTable(item[column.id], column.reference) }}</td>
         <td class="is-icon">
           <a href="#" @click.prevent="edit(item._id)">
             <i class="fa fa-pencil-square-o"></i>

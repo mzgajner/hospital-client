@@ -8,16 +8,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 import EntityList from './_EntityList.vue'
 
 export default {
   name: 'RoomTypes',
   components: { EntityList },
-  methods: mapMutations({ updateCurrentEntity: 'UPDATE_CURRENT_ENTITY' }),
-  created() {
-    this.updateCurrentEntity('roomTypes')
+  beforeCreate() {
+    this.$store.commit('UPDATE_CURRENT_ENTITY', 'roomTypes')
   }
 }
 </script>

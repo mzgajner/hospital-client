@@ -10,16 +10,13 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 import EntityList from './_EntityList.vue'
 
 export default {
   name: 'Transports',
   components: { EntityList },
-  methods: mapMutations({ updateCurrentEntity: 'UPDATE_CURRENT_ENTITY' }),
-  created() {
-    this.updateCurrentEntity('transports')
+  beforeCreate() {
+    this.$store.commit('UPDATE_CURRENT_ENTITY', 'transports')
   }
 }
 </script>
