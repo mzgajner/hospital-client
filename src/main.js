@@ -7,14 +7,16 @@ import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 
 import App from './App.vue'
-import Guests from './components/Guests.vue'
 import Events from './components/Events.vue'
+import Guests from './components/Guests.vue'
+import Payers from './components/Payers.vue'
+import Rooms from './components/Rooms.vue'
+import RoomTypes from './components/RoomTypes.vue'
+import Transports from './components/Transports.vue'
 
 import * as actions from './vuex/actions.js'
 import * as getters from './vuex/getters.js'
-import general from './vuex/modules/_general.js'
-import events from './vuex/modules/events.js'
-import guests from './vuex/modules/guests.js'
+import state from './vuex/state.js'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
@@ -25,11 +27,7 @@ Vue.http.options.root = 'http://localhost:8080'
 const store = new Vuex.Store({
   actions,
   getters,
-  modules: {
-    general,
-    events,
-    guests
-  }
+  ...state
 })
 
 const router = new VueRouter({
@@ -38,8 +36,12 @@ const router = new VueRouter({
   linkActiveClass: 'is-active',
   routes: [
     { path: '/', redirect: '/guests' },
+    { path: '/events', component: Events },
     { path: '/guests', component: Guests },
-    { path: '/events', component: Events }
+    { path: '/payers', component: Payers },
+    { path: '/rooms', component: Rooms },
+    { path: '/roomTypes', component: RoomTypes },
+    { path: '/transports', component: Transports }
   ]
 })
 

@@ -1,6 +1,3 @@
-<style lang="sass">
-</style>
-
 <template>
   <div class="modal" :class="{ 'is-active': visible }">
     <div class="modal-background"></div>
@@ -11,9 +8,37 @@
       </header>
       <section class="modal-card-body">
         <template v-for="field in fields">
-          <label class="label" :for="field">{{ capitalize(field) }}</label>
+          <label class="label" :for="field.id">{{ field.label }}</label>
           <p class="control">
-            <input :value="getSelected ? getSelected[field] : ''" :id="field" :name="field" class="input" type="text">
+            <span v-if="field.values || field.reference"
+              class="select">
+              <select
+                :id="field.id"
+                :name="field.id">
+                <template v-if="field.values">
+                  <option
+                    v-for="value in field.values"
+                    :selected="getSelected ? getSelected[field.id] === value : false">
+                    {{ value }}
+                  </option>
+                </template>
+                <template v-else>
+                  <option
+                    v-for="item in getAllEntities[field.reference]"
+                    :value="item._id"
+                    :selected="getSelected ? getSelected[field.id] === item._id : false">
+                    {{ generateLabelForObject(item) }}
+                  </option>
+                </template>
+              </select>
+            </span>
+            <input v-else
+              :value="getSelected ? formatValueForDisplay(getSelected[field.id]) : ''"
+              :id="field.id"
+              :name="field.id"
+              class="input"
+              :type="{[String]: 'text', [Number]: 'number', [Date]: 'datetime-local'}[field.type]"
+            >
           </p>
         </template>
       </section>
@@ -29,14 +54,19 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+
+import Formatter from './_Formatter'
 
 export default {
   name: 'FormPopup',
-  computed: mapGetters(['getSelected']),
-  methods: {
-    capitalize: _.capitalize
+  mixins: [Formatter],
+  computed: {
+    ...mapGetters([
+      'getSelected',
+      'getAllEntities'
+    ])
   },
   props: {
     submit: Function,

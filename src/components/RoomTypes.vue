@@ -1,9 +1,9 @@
 <template>
   <entity-list
     :columns="[
-      { id: 'name', label: 'Name', type: String },
-      { id: 'location', label: 'Location', type: String },
-      { id: 'date', label: 'Date', type: Date }
+      { id: 'hotel', label: 'Hotel', type: String },
+      { id: 'size', label: 'Size', type: Number },
+      { id: 'price', label: 'Price', type: String }
     ]"/>
 </template>
 
@@ -13,11 +13,11 @@ import { mapMutations } from 'vuex'
 import EntityList from './_EntityList.vue'
 
 export default {
-  name: 'Events',
+  name: 'RoomTypes',
   components: { EntityList },
   methods: mapMutations({ updateCurrentEntity: 'UPDATE_CURRENT_ENTITY' }),
   created() {
-    this.updateCurrentEntity('events')
+    this.updateCurrentEntity('roomTypes')
   }
 }
 </script>

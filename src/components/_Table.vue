@@ -5,13 +5,13 @@
   <table class="table">
     <thead>
       <tr>
-        <th v-for="column in columns">{{ column }}</th>
+        <th v-for="column in columns">{{ column.label }}</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item in items">
-        <td v-for="column in columns">{{ item[column] }}</td>
+        <td v-for="column in columns">{{ formatValueForDisplay(item[column.id], column.reference) }}</td>
         <td class="is-icon">
           <a href="#" @click.prevent="edit(item._id)">
             <i class="fa fa-pencil-square-o"></i>
@@ -26,8 +26,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+import Formatter from './_Formatter'
+
 export default {
   name: 'Table',
+  mixins: [Formatter],
   props: {
     columns: {
       type: Array,
